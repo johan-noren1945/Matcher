@@ -9,11 +9,17 @@ public class OrderBook {
     private final int orderBookId;
     private final OrderList buyOrders = new OrderList();
     private final OrderList sellOrders = new OrderList();
-    private final HashMap < Long, Order > savedOrders = new HashMap();
+    private final HashMap<Long, Order> savedOrders = new HashMap<>();
     private final OrderIterator orderIterator = new OrderIterator();
+    private final long maxQuantity;
 
-    public OrderBook(int orderBookId) {
+    public OrderBook(int orderBookId, long maxQuantity) {
         this.orderBookId = orderBookId;
+        this.maxQuantity = maxQuantity;
+    }
+
+    public long getMaxQuantity() {
+        return maxQuantity;
     }
 
     public int getOrderBookId() {
@@ -29,12 +35,11 @@ public class OrderBook {
         savedOrders.put(order.getOrderId(), order);
     }
 
-    public Order removeOrder(final Order order ){
-        if (order != null){
-            if(order.getSide() == Side.BUY){
+    public Order removeOrder(final Order order) {
+        if (order != null) {
+            if (order.getSide() == Side.BUY) {
                 buyOrders.removeOrder(order);
-            }
-            else {
+            } else {
                 sellOrders.removeOrder(order);
             }
             savedOrders.remove(order.getOrderId());
@@ -42,15 +47,14 @@ public class OrderBook {
         return order;
     }
 
-    public Order getOrder(long id){
+    public Order getOrder(long id) {
         return savedOrders.get(id);
     }
 
     public OrderIterator getOrderIterator(Side side) {
-        if(side == Side.BUY){
+        if (side == Side.BUY) {
             orderIterator.init(buyOrders);
-        }
-        else {
+        } else {
             orderIterator.init(sellOrders);
         }
         return orderIterator;

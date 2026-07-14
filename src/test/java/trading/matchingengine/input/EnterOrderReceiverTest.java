@@ -1,14 +1,12 @@
 package trading.matchingengine.input;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import trading.matchingengine.AbstractTester;
-import trading.matchingengine.logic.*;
-import trading.matchingengine.util.ReferenceDataRepository;
+import trading.matchingengine.logic.Order;
+import trading.matchingengine.logic.Side;
+import trading.matchingengine.logic.TimeInForce;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class EnterOrderReceiverTest extends AbstractTester {
 
@@ -19,5 +17,13 @@ public class EnterOrderReceiverTest extends AbstractTester {
         assertNotNull(order);
         assertEquals(100, order.getPrice());
         assertEquals(10, order.getOrderQuantity());
+    }
+    @Test
+    public void testOrderQuantityTooLarge(){
+        final int orderBookId = 2;
+        addOrderBook(orderBookId, 100);
+        enterLimitOrder(orderBookId, USER_ID, Side.BUY, 99, 101, TimeInForce.DAY);
+        Order order = referenceDataRepository.getOrderBook(orderBookId).getOrder(1);
+        assertNull(order);
     }
 }
