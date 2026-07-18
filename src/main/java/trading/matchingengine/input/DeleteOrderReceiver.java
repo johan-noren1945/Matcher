@@ -1,17 +1,16 @@
 package trading.matchingengine.input;
 
-import trading.matchingengine.logic.Order;
-import trading.matchingengine.logic.OrderBook;
-import trading.matchingengine.logic.OrderFactory;
-import trading.matchingengine.logic.User;
+import trading.matchingengine.logic.*;
 import trading.matchingengine.message.DeleteOrder;
 import trading.matchingengine.util.ReferenceDataRepository;
 
-public class DeleteOrderReciever {
+public class DeleteOrderReceiver {
     private final ReferenceDataRepository referenceDataRepository;
+    private final Transaction transaction;
 
-    public DeleteOrderReciever(ReferenceDataRepository referenceDataRepository, OrderFactory orderFactory) {
+    public DeleteOrderReceiver(ReferenceDataRepository referenceDataRepository, OrderFactory orderFactory, Transaction transaction) {
         this.referenceDataRepository = referenceDataRepository;
+        this.transaction = transaction;
     }
 
     public void onDeleteOrder(final DeleteOrder deleteOrder) {
@@ -19,11 +18,13 @@ public class DeleteOrderReciever {
         User user = referenceDataRepository.getUser(deleteOrder.getUserId());
         if (user != null && orderBook != null) {
             Order order = orderBook.getOrder(deleteOrder.getOrderId());
+            transaction.addOrder(order);
             if (order != null) {
                 if (order.getOrderBook().getOrderBookId() == deleteOrder.getOrderBookId() && order.getUser().getUserId() == deleteOrder.getUserId()) {
                     orderBook.removeOrder(order);
                 }
             }
+            transaction.commit();
         }
     }
 }

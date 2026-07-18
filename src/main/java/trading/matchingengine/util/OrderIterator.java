@@ -21,9 +21,7 @@ public class OrderIterator implements Iterator<Order> {
 
     @Override
     public Order next() {
-        Order tempOrder = currentOrder;
-        currentOrder = tempOrder.getNext();
-        return tempOrder;
+        return currentOrder;
     }
 
     @Override

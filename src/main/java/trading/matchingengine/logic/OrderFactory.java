@@ -17,6 +17,7 @@ public class OrderFactory {
         order.setSide(enterOrder.getSide());
         order.setPrice(enterOrder.getPrice());
         order.setOrderQuantity(enterOrder.getOrderQuantity());
+        order.setLeavesQuantity(enterOrder.getOrderQuantity());
         order.setOrderType(enterOrder.getOrderType());
         order.setTimeInForce(enterOrder.getTimeInForce());
         order.setTimeStamp(timeStamp++);
@@ -31,6 +32,7 @@ public class OrderFactory {
         }
         order.setPrice(updateOrder.getPrice());
         order.setOrderQuantity(updateOrder.getOrderQuantity());
+        order.setLeavesQuantity(updateOrder.getOrderQuantity());
         if (rerank) {
             order.setTimeStamp(timeStamp++);
         }
