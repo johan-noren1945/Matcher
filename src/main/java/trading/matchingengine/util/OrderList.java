@@ -33,7 +33,10 @@ public class OrderList {
 
     public void removeOrder(final Order order) {
 
-        if (order == first) {
+        if (first == last) {
+            first = null;
+            last = null;
+        } else if (order == first) {
             first = order.getNext();
         } else if (order == last) {
             last = order.getPrev();

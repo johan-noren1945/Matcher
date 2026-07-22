@@ -1,6 +1,7 @@
 package trading.matchingengine.logic;
 
 import trading.matchingengine.util.OrderIterator;
+import trading.matchingengine.util.OrderIterator2;
 
 public class Matcher {
     private final Transaction transaction;
@@ -11,9 +12,8 @@ public class Matcher {
     }
 
     public void MatchOrder(final Order order) {
-        OrderIterator iterator = order.getOrderBook().getOrderIterator(order.getSide() == Side.BUY ? Side.SELL : Side.BUY);
-        while (iterator.hasNext() && order.getLeavesQuantity() > 0) {
-            Order passiveOrder = iterator.next();
+        OrderIterator2 iterator = order.getOrderBook().getOrderIterator(order.getSide() == Side.BUY ? Side.SELL : Side.BUY);
+        for (Order passiveOrder = iterator.getFirst(); passiveOrder != null && order.getLeavesQuantity() > 0; passiveOrder = iterator.getNext()) {
             if (CanMatch(order, passiveOrder)) {
                 long matchQuantity = Math.min(order.getLeavesQuantity(), passiveOrder.getLeavesQuantity());
                 order.setLeavesQuantity(order.getLeavesQuantity() - matchQuantity);
