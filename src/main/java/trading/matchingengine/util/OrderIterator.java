@@ -2,33 +2,41 @@ package trading.matchingengine.util;
 
 import trading.matchingengine.logic.Order;
 
-import java.util.Iterator;
+public class OrderIterator {
 
-public class OrderIterator implements Iterator<Order> {
-    private Order currentOrder;
     private OrderList orderList;
+    private Order currentOrder;
 
-    public void init(final OrderList orderList) {
+    public void init(OrderList orderList) {
         this.orderList = orderList;
+    }
+
+    public Order getFirst() {
         currentOrder = orderList.getFirst();
-    }
-
-    @Override
-    public void remove() {
-        currentOrder = currentOrder.getPrev();
-        orderList.removeOrder(currentOrder);
-    }
-
-    @Override
-    public Order next() {
         return currentOrder;
     }
 
-    @Override
-    public boolean hasNext() {
+    public Order getNext() {
         if (currentOrder == null) {
             currentOrder = orderList.getFirst();
+            return currentOrder;
         }
-        return currentOrder != null;
+        currentOrder = currentOrder.getNext();
+        return currentOrder;
+    }
+
+    public Order getLast() {
+        currentOrder = orderList.getLast();
+        return currentOrder;
+    }
+
+    public Order getCurrent() {
+        return currentOrder;
+    }
+
+    public void remove() {
+        Order previousOrder = currentOrder.getPrev();
+        currentOrder.getOrderBook().removeOrder(currentOrder);
+        currentOrder = previousOrder;
     }
 }

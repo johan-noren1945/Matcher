@@ -1,10 +1,6 @@
 package trading.matchingengine.message;
 
-import trading.matchingengine.logic.OrderType;
-import trading.matchingengine.logic.Side;
-import trading.matchingengine.logic.TimeInForce;
-
-public class Trade {
+public class TradeChanged {
     private long tradeId;
     private long buyOrderId;
     private long sellOrderId;

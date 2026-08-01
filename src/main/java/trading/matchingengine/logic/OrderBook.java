@@ -1,7 +1,6 @@
 package trading.matchingengine.logic;
 
 import trading.matchingengine.util.OrderIterator;
-import trading.matchingengine.util.OrderIterator2;
 import trading.matchingengine.util.OrderList;
 
 import java.util.HashMap;
@@ -11,7 +10,7 @@ public class OrderBook {
     private final OrderList buyOrders = new OrderList();
     private final OrderList sellOrders = new OrderList();
     private final HashMap<Long, Order> savedOrders = new HashMap<>();
-    private final OrderIterator2 orderIterator = new OrderIterator2();
+    private final OrderIterator orderIterator = new OrderIterator();
     private final long maxQuantity;
 
     public OrderBook(int orderBookId, long maxQuantity) {
@@ -52,7 +51,7 @@ public class OrderBook {
         return savedOrders.get(id);
     }
 
-    public OrderIterator2 getOrderIterator(Side side) {
+    public OrderIterator getOrderIterator(Side side) {
         if (side == Side.BUY) {
             orderIterator.init(buyOrders);
         } else {
