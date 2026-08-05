@@ -2,7 +2,6 @@ package trading.matchingengine.input;
 
 import org.junit.jupiter.api.Test;
 import trading.matchingengine.AbstractTester;
-import trading.matchingengine.logic.Order;
 import trading.matchingengine.logic.Side;
 import trading.matchingengine.logic.TimeInForce;
 import trading.matchingengine.message.OrderChanged;
@@ -18,6 +17,7 @@ public class EnterOrderTest extends AbstractTester {
         assertNotNull(orderChanged);
         verifyOrderChanged(orderChanged, ORDER_BOOK_ID, USER_ID, Side.BUY, 100, 10, 10, TimeInForce.DAY);
     }
+
     //Ändra så de använder orderChanged istället för orderBook
     @Test
     public void testOrderQuantityTooLarge() {
@@ -31,12 +31,19 @@ public class EnterOrderTest extends AbstractTester {
     @Test
     public void testOrderMatching() {
         enterLimitOrder(ORDER_BOOK_ID, USER_ID, Side.BUY, 100, 10, TimeInForce.DAY);
+        OrderChanged orderChanged = senderMock.getOrderChanged(1);
+        assertNotNull(orderChanged);
+        verifyOrderChanged(orderChanged, ORDER_BOOK_ID, USER_ID, Side.BUY, 100, 10, 10, TimeInForce.DAY);
+        senderMock.clear();
+
         enterLimitOrder(ORDER_BOOK_ID, USER_ID, Side.SELL, 100, 10, TimeInForce.DAY);
-        OrderChanged orderChanged = senderMock.getOrderChanged(0);
-        assertNull(orderChanged);
-        //Inte null
-        OrderChanged orderChanged2 = senderMock.getOrderChanged(1);
-        assertNull(orderChanged2);
+        orderChanged = senderMock.getOrderChanged(1);
+        assertNotNull(orderChanged);
+        verifyOrderChanged(orderChanged, ORDER_BOOK_ID, USER_ID, Side.BUY, 100, 10, 0, TimeInForce.DAY);
+
+        OrderChanged orderChanged2 = senderMock.getOrderChanged(2);
+        assertNotNull(orderChanged2);
+        verifyOrderChanged(orderChanged2, ORDER_BOOK_ID, USER_ID, Side.SELL, 100, 10, 0, TimeInForce.DAY);
     }
 
     @Test
